@@ -1,0 +1,48 @@
+USE perpustakaan;
+
+SELECT * FROM peminjaman;
+SELECT * FROM pengembalian;
+
+
+#1
+
+DELIMITER ||
+	CREATE PROCEDURE ubah_pinjamkeun (IN kd_pinjaman INTEGER(3), IN tgl_pinjaman DATETIME, IN tgl_kembali DATETIME, IN kd_buku INTEGER (3),
+			IN kd_petugas INTEGER (3), IN kd_anggota INTEGER (3), IN stats VARCHAR (10))
+		BEGIN
+			UPDATE peminjaman SET tanggal_pinjaman=tgl_pinjaman, tanggal_kembali=tgl_kembali, kode_buku=kd_buku, kode_petugas=kd_petugas, 
+				kode_anggota=kd_anggota, statuss=stats WHERE kode_peminjaman=kd_pinjaman;
+		END;
+
+|| DELIMITER;
+
+CALL  ubah_pinjamkeun ('2','2019-02-05 00:00:00','2019-02-10 00:00:00',2,1,2,"kembali");
+
+#2
+
+DELIMITER ||
+	CREATE PROCEDURE delup_pinjamkun (IN kd_pinjaman INTEGER (3), IN kd_pengembalian INTEGER (3))
+		BEGIN
+			DELETE FROM pengembalian WHERE kode_pengembalian=kd_pengembalian;
+			UPDATE peminjaman SET statuss='pinjam' WHERE kode_peminjaman=kd_pinjaman;
+		END;
+
+|| DELIMITER;
+
+CALL delup_pinjamkun('1','3');
+
+#3
+
+DELIMITER ||
+	CREATE PROCEDURE nambah_pinjam (IN kd_pinjam INTEGER (3), IN tgl_pinjam DATETIME, IN kembali DATETIME, IN kd_buku INTEGER (3), IN kd_petugas INTEGER (3), 
+			IN kd_anggota INTEGER (3), IN stats VARCHAR (10))
+		BEGIN
+			DECLARE kembali DATETIME;
+			SET kembali=ADDDATE(tgl_pinjam, INTERVAL 3 DAY);
+			INSERT INTO peminjaman (kode_peminjaman, tanggal_pinjaman, tanggal_kembali, kode_buku, kode_petugas, kode_anggota, statuss)
+			VALUES (kd_pinjam, tgl_pinjam, kembali, kd_buku, kd_petugas, kd_anggota, stats);
+		END;
+
+|| DELIMITER;
+
+CALL nambah_pinjam ('8', '2019-02-28 00:00:00','',2,1,3,"pinjam");

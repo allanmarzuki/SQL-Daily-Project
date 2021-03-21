@@ -1,0 +1,27 @@
+	
+#1 Menampilkan data anggota yang pernah meminjam buku dengan tahun terbit lebih dari atau sama dengan 2015
+
+SELECT ag.`kode_anggota`,ag.`nama_anggota`,ag.`alamat_anggota`,
+ag.`no_telp_anggota`,ag.`foto_anggota`,ag.`jenis_kelamin` FROM anggota AS ag
+INNER JOIN peminjaman AS pj ON pj.`kode_anggota` = ag.`kode_anggota`
+WHERE pj.`tanggal_pinjaman` IN (SELECT tanggal_pinjaman FROM peminjaman WHERE tanggal_pinjaman >= '2015-00-00 00:00:00')
+
+#2. Menampilkan data buku yang memiliki stok buku lebih rendah daripada semua buku yang berjenis novel
+
+SELECT * FROM buku WHERE jumlah = (SELECT MIN(jumlah) FROM buku 
+INNER JOIN kategori ON kategori.`kode_kategori` = buku.`kode_kategori` 
+WHERE kategori.kode_kategori != 1)
+
+SELECT * FROM kategori
+#3. menampilkan semua buku yang pernah dipinjam dengan penerbit beralamat di yogyakarta
+
+SELECT buku.`kode_buku`, buku.`judul_buku`, buku.`deskripsi`,
+buku.`jumlah`, buku.`tahun_terbit`, buku.`kode_kategori`, buku.`kode_pengarang`,
+buku.`kode_penerbit` FROM buku 
+INNER JOIN penerbit AS pnb ON buku.`kode_penerbit` = pnb.kode_penerbit
+WHERE pnb.alamat_penerbit IN (SELECT alamat_penerbit FROM penerbit WHERE alamat_penerbit = 'yogyakarta')
+ 
+ 
+#4. 
+ SELECT * FROM penerbit
+ 

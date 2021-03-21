@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="latin1" collation="latin1_swedish_ci">perpustakaan</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="anggota" view="colnames">
+<left>43</left>
+<top>467</top>
+<width>165</width>
+<height>209</height>
+<sql_create_table>CREATE TABLE `anggota` (
+  `kode_anggota` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_anggota` varchar(30) NOT NULL,
+  `alamat_anggota` varchar(100) NOT NULL,
+  `no_telp_anggota` varchar(14) NOT NULL,
+  `foto_anggota` varchar(255) NOT NULL,
+  `jenis_kelamin` enum('0','1') DEFAULT NULL,
+  PRIMARY KEY (`kode_anggota`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="buku" view="colnames">
+<left>670</left>
+<top>516</top>
+<width>162</width>
+<height>249</height>
+<sql_create_table>CREATE TABLE `buku` (
+  `kode_buku` int(11) NOT NULL AUTO_INCREMENT,
+  `judul_buku` varchar(30) NOT NULL,
+  `deskripsi` varchar(100) NOT NULL,
+  `jumlah` int(11) DEFAULT NULL,
+  `tahun_terbit` char(4) DEFAULT NULL,
+  `kode_kategori` int(11) NOT NULL,
+  `kode_pengarang` int(11) NOT NULL,
+  `kode_penerbit` int(11) NOT NULL,
+  PRIMARY KEY (`kode_buku`),
+  KEY `kode_kategori` (`kode_kategori`),
+  KEY `kode_pengarang` (`kode_pengarang`),
+  KEY `kode_penerbit` (`kode_penerbit`),
+  CONSTRAINT `buku_ibfk_1` FOREIGN KEY (`kode_kategori`) REFERENCES `kategori` (`kode_kategori`),
+  CONSTRAINT `buku_ibfk_2` FOREIGN KEY (`kode_pengarang`) REFERENCES `pengarang` (`kode_pengarang`),
+  CONSTRAINT `buku_ibfk_3` FOREIGN KEY (`kode_penerbit`) REFERENCES `penerbit` (`kode_penerbit`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="kategori" view="colnames">
+<left>1027</left>
+<top>25</top>
+<width>150</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `kategori` (
+  `kode_kategori` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_kategori` varchar(30) NOT NULL,
+  PRIMARY KEY (`kode_kategori`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="peminjaman" view="colnames">
+<left>360</left>
+<top>311</top>
+<width>170</width>
+<height>229</height>
+<sql_create_table>CREATE TABLE `peminjaman` (
+  `kode_peminjaman` int(11) NOT NULL AUTO_INCREMENT,
+  `tanggal_pinjaman` datetime NOT NULL,
+  `tanggal_kembali` datetime NOT NULL,
+  `kode_buku` int(11) NOT NULL,
+  `kode_petugas` int(11) NOT NULL,
+  `kode_anggota` int(11) NOT NULL,
+  `statuss` varchar(10) NOT NULL,
+  PRIMARY KEY (`kode_peminjaman`),
+  KEY `kode_buku` (`kode_buku`),
+  KEY `kode_petugas` (`kode_petugas`),
+  KEY `kode_anggota` (`kode_anggota`),
+  CONSTRAINT `peminjaman_ibfk_1` FOREIGN KEY (`kode_buku`) REFERENCES `buku` (`kode_buku`),
+  CONSTRAINT `peminjaman_ibfk_2` FOREIGN KEY (`kode_petugas`) REFERENCES `petugas` (`kode_petugas`),
+  CONSTRAINT `peminjaman_ibfk_3` FOREIGN KEY (`kode_anggota`) REFERENCES `anggota` (`kode_anggota`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="penerbit" view="colnames">
+<left>1038</left>
+<top>410</top>
+<width>165</width>
+<height>169</height>
+<sql_create_table>CREATE TABLE `penerbit` (
+  `kode_penerbit` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_penerbit` varchar(30) NOT NULL,
+  `alamat_penerbit` varchar(100) NOT NULL,
+  `no_telp_penerbit` varchar(14) NOT NULL,
+  PRIMARY KEY (`kode_penerbit`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="pengarang" view="colnames">
+<left>1031</left>
+<top>182</top>
+<width>180</width>
+<height>169</height>
+<sql_create_table>CREATE TABLE `pengarang` (
+  `kode_pengarang` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_pengarang` varchar(30) NOT NULL,
+  PRIMARY KEY (`kode_pengarang`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="pengembalian" view="colnames">
+<left>649</left>
+<top>287</top>
+<width>200</width>
+<height>169</height>
+<sql_create_table>CREATE TABLE `pengembalian` (
+  `kode_pengembalian` int(11) NOT NULL AUTO_INCREMENT,
+  `tanggal_pengembalian` datetime NOT NULL,
+  `denda` int(11) NOT NULL,
+  `kode_peminjaman` int(11) NOT NULL,
+  PRIMARY KEY (`kode_pengembalian`),
+  KEY `kode_peminjaman` (`kode_peminjaman`),
+  CONSTRAINT `pengembalian_ibfk_1` FOREIGN KEY (`kode_peminjaman`) REFERENCES `peminjaman` (`kode_peminjaman`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="petugas" view="colnames">
+<left>75</left>
+<top>191</top>
+<width>164</width>
+<height>189</height>
+<sql_create_table>CREATE TABLE `petugas` (
+  `kode_petugas` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_petugas` varchar(30) NOT NULL,
+  `alamat_petugas` varchar(100) NOT NULL,
+  `no_telp_petugas` varchar(14) NOT NULL,
+  `foto_petugas` varchar(255) NOT NULL,
+  `jenis_kelamin` enum('0','1') NOT NULL,
+  PRIMARY KEY (`kode_petugas`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
